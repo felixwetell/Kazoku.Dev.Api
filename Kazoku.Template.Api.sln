@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kazoku.Template.Api", "Kazoku.Template.Api\Kazoku.Template.Api.csproj", "{3009E901-A727-421B-ACDD-AB353E0A2F05}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3009E901-A727-421B-ACDD-AB353E0A2F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3009E901-A727-421B-ACDD-AB353E0A2F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3009E901-A727-421B-ACDD-AB353E0A2F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3009E901-A727-421B-ACDD-AB353E0A2F05}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D85547A0-6355-40C4-9A45-7437E4B9EC83}
+	EndGlobalSection
+EndGlobal
