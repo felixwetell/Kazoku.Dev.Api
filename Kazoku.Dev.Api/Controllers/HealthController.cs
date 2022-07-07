@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Kazoku.Template.Api.Controllers
+namespace Kazoku.Dev.Api.Controllers
 {
     /// <summary>
     /// Health controller.
