@@ -9,8 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\FelixWetell\.nuget\packages\kazoku.common.models\1.0.0\contentFiles\any\net6.0\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Kazoku.Common.Models" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
   </ItemGroup>
 
   <ItemGroup>
