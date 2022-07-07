@@ -33,7 +33,7 @@ namespace Kazoku.Dev.Api.Services
                 var sql = "select * from projects";
                 connection.Open();
 
-                var queryProjects = connection.Query<Project>(sql);
+                var queryProjects = await connection.QueryAsync<Project>(sql);
 
                 foreach (var project in queryProjects)
                 {
