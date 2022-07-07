@@ -81,8 +81,7 @@ app.UseSwaggerUI(options =>
 app.UseAuthorization();
 app.MapControllers();
 app.Logger.LogInformation($"{apiName} is now running.");
-app.Logger.LogInformation($"API Template developed by Kazoku IT AB.");
-app.Logger.LogInformation($"More info can be found here: https://github.com/kazokuit/Kazoku.Dev.Api.");
+app.Logger.LogInformation($"Kazoku.Dev.Api developed by Kazoku IT AB.");
 
 // Running application
 app.Run();
