@@ -31,13 +31,16 @@ namespace Kazoku.Dev.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Project>>> GetProjects()
         {
+            _logger.LogInformation("Tries to get projects.");
             try
             {
-                List<Project> list = await _projectService.GetProjectsAsync();
-                return Ok(list);
+                List<Project> projects = await _projectService.GetProjectsAsync();
+                _logger.LogInformation("Fetch was successfull, returning with list of projects.");
+                return Ok(projects);
             }
             catch (Exception ex)
             {
+                _logger.LogDebug("Failed to fetch projects. See error below.");
                 _logger.LogError(ex.ToString());
                 return StatusCode(500);
             }
@@ -45,9 +48,21 @@ namespace Kazoku.Dev.Api.Controllers
 
         // GET api/<ProjectsController>/5
         [HttpGet("{id}")]
-        public string GetProject(int id)
+        public async Task<ActionResult<Project>> GetProject(Guid id)
         {
-            return "value";
+            _logger.LogInformation("Tries to get project.");
+            try
+            {
+                Project project = await _projectService.GetProjectAsync(id);
+                _logger.LogInformation("Fetch was successfull, returning with project.");
+                return Ok(project);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug("Failed to fetch project. See error below.");
+                _logger.LogError(ex.ToString());
+                return StatusCode(500);
+            }
         }
 
         // POST api/<ProjectsController>

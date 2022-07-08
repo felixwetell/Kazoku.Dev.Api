@@ -26,26 +26,51 @@ namespace Kazoku.Dev.Api.Services
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<Project>> GetProjectsAsync()
         {
+            List<Project> projects = new List<Project>();
+            
             _logger.LogDebug("Initializing SQL connection");
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
             {
-                var sql = "SELECT * projects";
+                var sql = "SELECT * FROM projects";
                 
                 _logger.LogDebug("Opens SQL connection.");
                 connection.Open();
 
                 _logger.LogDebug("Tries to execute query on SQL connection.");
-                var resultList = await connection.QueryAsync<Project>(sql);
+                var result = await connection.QueryAsync<Project>(sql);
 
                 _logger.LogDebug("Loops through result list and adds projects to project list.");
-                List<Project> projects = new List<Project>();
-                foreach (var project in resultList)
+                foreach (var project in result)
                 {
                     projects.Add(project);
                 }
 
                 _logger.LogInformation($"Returns list of projects containing {projects.Count} objects.");
-                return projects;
+            };
+            return projects;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Project> GetProjectAsync(Guid id)
+        {
+            _logger.LogDebug("Initializing SQL connection");
+            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            {
+                var sql = $"SELECT * FROM projects WHERE id = '{id}'";
+
+                _logger.LogDebug("Opens SQL connection.");
+                connection.Open();
+
+                _logger.LogDebug("Tries to execute query on SQL connection.");
+                var result = await connection.QuerySingleAsync<Project>(sql);
+
+                Project project = result;
+
+                return project;
             };
         }
     }
