@@ -60,7 +60,7 @@ namespace Kazoku.Dev.Api.Services
             _logger.LogDebug("Initializing SQL connection");
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
             {
-                var sql = $"SELECT * FROM projects WHERE id = '{id}'";
+                var sql = $"SELECT * FROM projects WHERE Id = '{id}'";
 
                 _logger.LogDebug("Opens SQL connection.");
                 connection.Open();
