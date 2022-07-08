@@ -122,6 +122,37 @@ namespace Kazoku.Dev.Api.Services
         }
 
         /// <summary>
+        /// Updates an existing project in the database async.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns>Updated project object.</returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<Project> UpdateProjectAsync(Project project)
+        {
+            _logger.LogDebug("Initializing SQL connection");
+            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            {
+                string sql = @"UPDATE [dbo].[Projects] SET 
+                              [Name] = @Name, [Image] = @Image, [Description] = @Description, [Status] = @Status, [Url] = @Url, 
+                              [Created] = @Created, [Updated] = @Updated, [Deleted] = @Deleted, [Views] = @Views, [Shares] = @Shares";
+
+                _logger.LogDebug("Opens SQL connection.");
+                connection.Open();
+
+                try
+                {
+                    await connection.ExecuteAsync(sql, project);
+                    return project;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    throw new Exception(ex.ToString());
+                }
+            }
+        }
+
+        /// <summary>
         /// Deletes a project from database async.
         /// </summary>
         /// <param name="id"></param>

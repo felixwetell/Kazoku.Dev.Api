@@ -31,7 +31,7 @@ namespace Kazoku.Dev.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Project>>> GetProjects()
         {
-            _logger.LogInformation("Tries to get projects.");
+            _logger.LogInformation("Get projects started.");
             try
             {
                 List<Project> projects = await _projectService.GetProjectsAsync();
@@ -54,7 +54,7 @@ namespace Kazoku.Dev.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(Guid id)
         {
-            _logger.LogInformation("Tries to get project.");
+            _logger.LogInformation("Get project started.");
             try
             {
                 Project project = await _projectService.GetProjectAsync(id);
@@ -78,7 +78,6 @@ namespace Kazoku.Dev.Api.Controllers
         public async Task<ActionResult<Project>> PostProjet([FromBody] Project project)
         {
             _logger.LogInformation("Creating project started.");
-
             try
             {
                 project = await _projectService.CreateProjectAsync(project);
@@ -93,13 +92,51 @@ namespace Kazoku.Dev.Api.Controllers
             }
         }
 
-        // PUT api/<ProjectsController>/5
+        /// <summary>
+        /// Updates a project.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="project"></param>
+        /// <returns>Updated project.</returns>
         [HttpPut("{id}")]
-        public void PutProjects(Guid id, [FromBody] Project project)
+        public async Task<ActionResult<Project>> PutProjects(Guid id, [FromBody] Project project)
         {
+            if (id != project.Id)
+            {
+                _logger.LogError($"Id {id} do not match with project id {project.Id}.");
+                return BadRequest();
+            }
+
+            _logger.LogDebug($"Fetching project with id {id}.");
+            Project temp = await _projectService.GetProjectAsync(id);
+
+            _logger.LogDebug("Checks if project was found.");
+            if (temp is null)
+            {
+                _logger.LogWarning("No project was found.");
+                return NotFound();
+            }
+
+            _logger.LogDebug("Update project started.");
+            try
+            {
+                project = await _projectService.UpdateProjectAsync(project);
+                _logger.LogInformation("Fetch was successfull, returning with project.");
+                return Ok(project);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug("Failed to create project. See error below.");
+                _logger.LogError(ex.ToString());
+                return StatusCode(500);
+            }
         }
 
-        // DELETE api/<ProjectsController>/5
+        /// <summary>
+        /// Deletes a project based on the id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
@@ -109,10 +146,11 @@ namespace Kazoku.Dev.Api.Controllers
             _logger.LogDebug("Checks if project was found.");
             if (project is null)
             {
-                _logger.LogWarning("No projet was found.");
+                _logger.LogWarning("No project was found.");
                 return NotFound();
             }
 
+            _logger.LogDebug("Deleting project started.");
             try
             {
                 _logger.LogDebug("Starting to delete project.");
