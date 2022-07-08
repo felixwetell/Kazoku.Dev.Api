@@ -26,22 +26,27 @@ namespace Kazoku.Dev.Api.Services
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<Project>> GetProjectsAsync()
         {
-            List<Project> projects = new List<Project>();
-
+            _logger.LogDebug("Initializing SQL connection");
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
             {
-                var sql = "select * from projects";
+                var sql = "SELECT * projects";
+                
+                _logger.LogDebug("Opens SQL connection.");
                 connection.Open();
 
-                var queryProjects = await connection.QueryAsync<Project>(sql);
+                _logger.LogDebug("Tries to execute query on SQL connection.");
+                var resultList = await connection.QueryAsync<Project>(sql);
 
-                foreach (var project in queryProjects)
+                _logger.LogDebug("Loops through result list and adds projects to project list.");
+                List<Project> projects = new List<Project>();
+                foreach (var project in resultList)
                 {
                     projects.Add(project);
                 }
-            };
 
-            return projects;
+                _logger.LogInformation($"Returns list of projects containing {projects.Count} objects.");
+                return projects;
+            };
         }
     }
 }
