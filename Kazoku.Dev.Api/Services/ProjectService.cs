@@ -101,7 +101,9 @@ namespace Kazoku.Dev.Api.Services
             _logger.LogDebug("Initializing SQL connection");
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
             {
-                string sql = @"INSERT INTO [dbo].[Projects]([Name], [Image], [Description], [Status], [Url], [Created], [Updated], [Deleted], [Views], [Shares]) OUTPUT INSERTED.Id VALUES (@Name, @Image, @Description, @Status, @Url, @Created, @Updated, @Deleted, @Views, @Shares)";
+                string sql = @"INSERT INTO [dbo].[Projects]([Name], [Image], [Description], [Status], [Url], [Created], [Updated], [Deleted], [Views], [Shares]) 
+                               OUTPUT INSERTED.Id 
+                               VALUES (@Name, @Image, @Description, @Status, @Url, @Created, @Updated, @Deleted, @Views, @Shares)";
 
                 _logger.LogDebug("Opens SQL connection.");
                 connection.Open();
