@@ -5,16 +5,21 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using Kazoku.Dev.Api.SwaggerOptions;
+using Kazoku.Dev.Api.Services;
+using Kazoku.Dev.Api.Models.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Variables
 string apiName = "Kazoku.Dev.Api";
 
+// Configurations
+builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
+
 // Versioning
 builder.Services.AddApiVersioning(config =>
 {
-    config.DefaultApiVersion = ApiVersion.Parse("2022-06-01");
+    config.DefaultApiVersion = ApiVersion.Parse("2022-07-01");
     config.AssumeDefaultVersionWhenUnspecified = true;
     config.ReportApiVersions = true;
     config.ApiVersionReader = new QueryStringApiVersionReader();
@@ -34,7 +39,6 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlFilePath);
 });
 
-
 // Logging
 builder.Logging.ClearProviders();
 builder.Services.AddLogging(options =>
@@ -51,6 +55,7 @@ builder.Services.AddLogging(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ProjectService>();
 
 // Building the application
 var app = builder.Build();
