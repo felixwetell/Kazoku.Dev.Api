@@ -31,27 +31,36 @@ namespace Kazoku.Dev.Api.Services
             _logger.LogDebug("Initializing SQL connection");
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
             {
-                var sql = "SELECT * FROM projects";
+                var sql = "SELECT * FROM [dbo].[Projects]";
                 
                 _logger.LogDebug("Opens SQL connection.");
                 connection.Open();
 
-                _logger.LogDebug("Tries to execute query on SQL connection.");
-                var result = await connection.QueryAsync<Project>(sql);
-
-                _logger.LogDebug("Loops through result list and adds projects to project list.");
-                foreach (var project in result)
+                try
                 {
-                    projects.Add(project);
-                }
+                    _logger.LogDebug("Tries to execute query on SQL connection.");
+                    var result = await connection.QueryAsync<Project>(sql);
+                    
+                    _logger.LogDebug("Loops through result list and adds projects to project list.");
+                    foreach (var project in result)
+                    {
+                        projects.Add(project);
+                    }
+                 
+                    _logger.LogInformation($"Returns list of projects containing {projects.Count} objects.");
+                    return projects;
 
-                _logger.LogInformation($"Returns list of projects containing {projects.Count} objects.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    throw new Exception(ex.ToString());
+                }
             };
-            return projects;
         }
 
         /// <summary>
-        /// 
+        /// Gets a projects based on Id from database async. 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -60,17 +69,82 @@ namespace Kazoku.Dev.Api.Services
             _logger.LogDebug("Initializing SQL connection");
             using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
             {
-                var sql = $"SELECT * FROM projects WHERE Id = '{id}'";
+                var sql = $"SELECT * FROM [dbo].[Projects] WHERE [Id] = '{id}'";
 
                 _logger.LogDebug("Opens SQL connection.");
                 connection.Open();
 
-                _logger.LogDebug("Tries to execute query on SQL connection.");
-                var result = await connection.QuerySingleAsync<Project>(sql);
+                try
+                {
+                    _logger.LogDebug("Tries to execute query on SQL connection.");
+                    var result = await connection.QuerySingleAsync<Project>(sql);
+                    
+                    _logger.LogInformation("Returns project object.");
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    throw new Exception(ex.ToString());
+                }
+            };
+        }
 
-                Project project = result;
+        /// <summary>
+        /// Creates project in database async.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns>New project object.</returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<Project> CreateProjectAsync(Project project)
+        {
+            _logger.LogDebug("Initializing SQL connection");
+            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            {
+                string sql = @"INSERT INTO [dbo].[Projects]([Name], [Image], [Description], [Status], [Url], [Created], [Updated], [Deleted], [Views], [Shares]) OUTPUT INSERTED.Id VALUES (@Name, @Image, @Description, @Status, @Url, @Created, @Updated, @Deleted, @Views, @Shares)";
 
-                return project;
+                _logger.LogDebug("Opens SQL connection.");
+                connection.Open();
+
+                try
+                {
+                    await connection.ExecuteAsync(sql, project);
+                    return project;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    throw new Exception(ex.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deletes a project from database async.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task DeleteProjectAsync(Guid id)
+        {
+            _logger.LogDebug("Initializing SQL connection");
+            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            {
+                var sql = $"DELETE FROM [dbo].[Projects] WHERE [Id] = '{id}'";
+
+                _logger.LogDebug("Opens SQL connection.");
+                connection.Open();
+
+                try
+                {
+                    _logger.LogDebug("Tries to execute query on SQL connection.");
+                    await connection.ExecuteAsync(sql);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    throw new Exception(ex.ToString());
+                }
             };
         }
     }

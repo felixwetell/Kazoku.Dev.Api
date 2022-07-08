@@ -25,7 +25,7 @@ namespace Kazoku.Dev.Api.Controllers
 
 
         /// <summary>
-        /// Gets projects.
+        /// Gets all projects.
         /// </summary>
         /// <returns>List of projects</returns>
         [HttpGet]
@@ -46,7 +46,11 @@ namespace Kazoku.Dev.Api.Controllers
             }
         }
 
-        // GET api/<ProjectsController>/5
+        /// <summary>
+        /// Gets project based on the Id. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Project object.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(Guid id)
         {
@@ -65,22 +69,64 @@ namespace Kazoku.Dev.Api.Controllers
             }
         }
 
-        // POST api/<ProjectsController>
+        /// <summary>
+        /// Creates a new project.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns>Newly created project</returns>
         [HttpPost]
-        public void PostProjet([FromBody] string value)
+        public async Task<ActionResult<Project>> PostProjet([FromBody] Project project)
         {
+            _logger.LogInformation("Creating project started.");
+
+            try
+            {
+                project = await _projectService.CreateProjectAsync(project);
+                _logger.LogInformation("Fetch was successfull, returning with project.");
+                return Ok(project);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug("Failed to create project. See error below.");
+                _logger.LogError(ex.ToString());
+                return StatusCode(500);
+            }
         }
 
         // PUT api/<ProjectsController>/5
         [HttpPut("{id}")]
-        public void PutProjects(int id, [FromBody] string value)
+        public void PutProjects(Guid id, [FromBody] Project project)
         {
         }
 
         // DELETE api/<ProjectsController>/5
         [HttpDelete("{id}")]
-        public void DeleteProject(int id)
+        public async Task<IActionResult> DeleteProject(Guid id)
         {
+            _logger.LogDebug($"Fetching project with id {id}.");
+            Project project = await _projectService.GetProjectAsync(id);
+
+            _logger.LogDebug("Checks if project was found.");
+            if (project is null)
+            {
+                _logger.LogWarning("No projet was found.");
+                return NotFound();
+            }
+
+            try
+            {
+                _logger.LogDebug("Starting to delete project.");
+                await _projectService.DeleteProjectAsync(id);
+
+                _logger.LogInformation($"Project with id {id} was deleted.");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug("Failed to delete project. See error below.");
+                _logger.LogError(ex.ToString());
+                return StatusCode(500);
+            }
         }
     }
 }
