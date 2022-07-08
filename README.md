@@ -4,8 +4,9 @@
 
 ## Description
 
-API Template project, developed by [Kazoku IT AB](https://kazoku.se). 
+Kazoku.Dev API project, developed by [Kazoku IT AB](https://kazoku.se). 
 
+Created to show off the different types of projects we are working on at Kazoku. We will also include some useful tools. 
 
 ## Features
 
