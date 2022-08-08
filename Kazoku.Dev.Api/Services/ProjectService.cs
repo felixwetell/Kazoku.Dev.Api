@@ -79,7 +79,8 @@ namespace Kazoku.Dev.Api.Services
                 try
                 {
                     _logger.LogDebug("Tries to execute query on SQL connection.");
-                    var result = await connection.QuerySingleOrDefaultAsync<Project>(sql);
+                    var result = await connection.QuerySingleAsync<Project>(sql);
+                    //var result = await connection.QuerySingleOrDefaultAsync<Project>(sql);
 
                     _logger.LogInformation("Returns project object.");
                     return result;

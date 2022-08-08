@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Kazoku.Dev.Api.Controllers
 {
+    /// <summary>
+    /// Projects controller.
+    /// </summary>
+
     [Route("api/projects")]
     [ApiVersion("2022-07-01")]
     [ApiController]
