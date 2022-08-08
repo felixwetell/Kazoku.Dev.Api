@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Kazoku.Dev.Api.Controllers
 {
+    /// <summary>
+    /// Projects controller.
+    /// </summary>
+
     [Route("api/projects")]
     [ApiVersion("2022-07-01")]
     [ApiController]
@@ -21,8 +25,6 @@ namespace Kazoku.Dev.Api.Controllers
             _logger = logger;
             _projectService = projectService;
         }
-
-
 
         /// <summary>
         /// Gets all projects.
@@ -57,8 +59,16 @@ namespace Kazoku.Dev.Api.Controllers
             _logger.LogInformation("Get project started.");
             try
             {
-                Project project = await _projectService.GetProjectAsync(id);
+                var result = await _projectService.GetProjectAsync(id);
+
+                if (result == null)
+                {
+                    _logger.LogInformation($"No prject found with ID: {id}");
+                    return NotFound();
+                }
+
                 _logger.LogInformation("Fetch was successfull, returning with project.");
+                Project project = result;
                 return Ok(project);
             }
             catch (Exception ex)

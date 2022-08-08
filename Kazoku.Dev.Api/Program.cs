@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 string apiName = "Kazoku.Dev.Api";
 
 // Configurations
-builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
+builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection(ConnectionStrings.Key));
 
 // Versioning
 builder.Services.AddApiVersioning(config =>
