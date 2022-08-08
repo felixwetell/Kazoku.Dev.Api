@@ -10,6 +10,7 @@ namespace Kazoku.Dev.Api.Services
     {
         private readonly ILogger<ProjectService> _logger;
         private readonly IOptions<ConnectionStrings> _connectionStrings;
+        private readonly string _database;
 
         public ProjectService(
             ILogger<ProjectService> logger,
@@ -17,6 +18,7 @@ namespace Kazoku.Dev.Api.Services
         {
             _logger = logger;
             _connectionStrings = connectionStrings;
+            _database = connectionStrings.Value.Database;
         }
 
         /// <summary>
@@ -26,10 +28,10 @@ namespace Kazoku.Dev.Api.Services
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<Project>> GetProjectsAsync()
         {
-            List<Project> projects = new List<Project>();
-            
+            List<Project> projects = new();
+
             _logger.LogDebug("Initializing SQL connection");
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            using (var connection = new SqlConnection(_database))
             {
                 var sql = "SELECT * FROM [dbo].[Projects]";
                 
@@ -67,7 +69,7 @@ namespace Kazoku.Dev.Api.Services
         public async Task<Project> GetProjectAsync(Guid id)
         {
             _logger.LogDebug("Initializing SQL connection");
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            using (var connection = new SqlConnection(_database))
             {
                 var sql = $"SELECT * FROM [dbo].[Projects] WHERE [Id] = '{id}'";
 
@@ -99,7 +101,7 @@ namespace Kazoku.Dev.Api.Services
         public async Task<Project> CreateProjectAsync(Project project)
         {
             _logger.LogDebug("Initializing SQL connection");
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            using (var connection = new SqlConnection(_database))
             {
                 string sql = @"INSERT INTO [dbo].[Projects]([Name], [Image], [Description], [Status], [Url], [Created], [Updated], [Deleted], [Views], [Shares]) 
                                OUTPUT INSERTED.Id 
@@ -130,7 +132,7 @@ namespace Kazoku.Dev.Api.Services
         public async Task<Project> UpdateProjectAsync(Project project)
         {
             _logger.LogDebug("Initializing SQL connection");
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            using (var connection = new SqlConnection(_database))
             {
                 string sql = @"UPDATE [dbo].[Projects] SET 
                               [Name] = @Name, [Image] = @Image, [Description] = @Description, [Status] = @Status, [Url] = @Url, 
@@ -161,7 +163,7 @@ namespace Kazoku.Dev.Api.Services
         public async Task DeleteProjectAsync(Guid id)
         {
             _logger.LogDebug("Initializing SQL connection");
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=KazokuDevDb;Integrated Security=SSPI"))
+            using (var connection = new SqlConnection(_database))
             {
                 var sql = $"DELETE FROM [dbo].[Projects] WHERE [Id] = '{id}'";
 
