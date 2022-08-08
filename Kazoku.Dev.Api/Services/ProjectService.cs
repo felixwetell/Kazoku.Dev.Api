@@ -42,7 +42,7 @@ namespace Kazoku.Dev.Api.Services
                 {
                     _logger.LogDebug("Tries to execute query on SQL connection.");
                     var result = await connection.QueryAsync<Project>(sql);
-                    
+
                     _logger.LogDebug("Loops through result list and adds projects to project list.");
                     foreach (var project in result)
                     {
@@ -79,8 +79,8 @@ namespace Kazoku.Dev.Api.Services
                 try
                 {
                     _logger.LogDebug("Tries to execute query on SQL connection.");
-                    var result = await connection.QuerySingleAsync<Project>(sql);
-                    
+                    var result = await connection.QuerySingleOrDefaultAsync<Project>(sql);
+
                     _logger.LogInformation("Returns project object.");
                     return result;
                 }
