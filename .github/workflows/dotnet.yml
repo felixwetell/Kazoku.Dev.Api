@@ -1,4 +1,4 @@
-name: .NET
+name: Build and test ASP.NET core app - Kazoku.Dev.Api
 
 on:
   push:
